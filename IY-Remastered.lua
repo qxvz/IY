@@ -22,7 +22,7 @@ if not game:IsLoaded() then
     notLoaded:Destroy()
 end
 
-currentVersion = "2.74"
+currentVersion = "3.50"
 
 Holder = Instance.new("Frame")
 Title = Instance.new("TextLabel")
@@ -212,7 +212,7 @@ Title.BorderSizePixel = 0
 Title.Size = UDim2.new(0, 250, 0, 20)
 Title.Font = Enum.Font.SourceSans
 Title.TextSize = 18
-Title.Text = "IY Remastered v" .. currentVersion
+Title.Text = "IY Remastered FE v" .. currentVersion
 
 do
 	local emoji = ({
