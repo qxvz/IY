@@ -10498,6 +10498,7 @@ addcmd("bang", {"rape"}, function(args, speaker)
 
     local Players = game:GetService("Players")
     local RunService = game:GetService("RunService")
+    local sittingConnection
 
     local function moveSmoothly(part, startCFrame, endCFrame, duration)
         local elapsedTime = 0
@@ -10510,7 +10511,8 @@ addcmd("bang", {"rape"}, function(args, speaker)
     end
 
     local function preventSitting(humanoid)
-        humanoid.StateChanged:Connect(function(_, newState)
+        if sittingConnection then sittingConnection:Disconnect() end
+        sittingConnection = humanoid.StateChanged:Connect(function(_, newState)
             if newState == Enum.HumanoidStateType.Seated then
                 humanoid.Sit = false
             end
@@ -10616,7 +10618,14 @@ addcmd("unbang", {"unrape"}, function(args, speaker)
         bangDied:Disconnect()
         bangDied = nil
     end
+
+    -- Allow sitting again
+    if sittingConnection then
+        sittingConnection:Disconnect()
+        sittingConnection = nil
+    end
 end)
+
 addcmd('carpet',{},function(args, speaker)
 	if not r15(speaker) then
 		execCmd('uncarpet')
