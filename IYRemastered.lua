@@ -10511,9 +10511,12 @@ addcmd("bang", {"rape"}, function(args, speaker)
     end
 
     local function preventSitting(humanoid)
+        -- Disconnect previous sitting connection if it exists
         if sittingConnection then sittingConnection:Disconnect() end
+
+        -- Prevent sitting only while "bang" is active
         sittingConnection = humanoid.StateChanged:Connect(function(_, newState)
-            if newState == Enum.HumanoidStateType.Seated then
+            if not stopFollow and newState == Enum.HumanoidStateType.Seated then
                 humanoid.Sit = false
             end
         end)
@@ -10550,6 +10553,7 @@ addcmd("bang", {"rape"}, function(args, speaker)
             return
         end
 
+        -- Prevent sitting while bang is active
         preventSitting(humanoid)
 
         local animation = Instance.new("Animation")
@@ -10625,7 +10629,6 @@ addcmd("unbang", {"unrape"}, function(args, speaker)
         sittingConnection = nil
     end
 end)
-
 addcmd('carpet',{},function(args, speaker)
 	if not r15(speaker) then
 		execCmd('uncarpet')
