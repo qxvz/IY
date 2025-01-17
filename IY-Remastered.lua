@@ -10588,11 +10588,26 @@ addcmd("bang", {"rape"}, function(args, speaker)
 end)
 
 addcmd("unbang", {"unrape"}, function(args, speaker)
+    -- Stop following
+    stopFollow = true
+
+    -- Stop animation if it exists
     if animationTrack then
         animationTrack:Stop()
         animationTrack = nil
     end
-    stopFollow = true
+
+    -- Disconnect the loop if it exists
+    if bangLoop then
+        bangLoop:Disconnect()
+        bangLoop = nil
+    end
+
+    -- Clean up additional connections if needed
+    if bangDied then
+        bangDied:Disconnect()
+        bangDied = nil
+    end
 end)
 addcmd('carpet',{},function(args, speaker)
 	if not r15(speaker) then
