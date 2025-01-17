@@ -605,6 +605,7 @@ IntroBackground.Position = UDim2.new(0, 0, 0, 45)
 IntroBackground.Size = UDim2.new(0, 250, 0, 175)
 IntroBackground.ZIndex = 10
 
+local Logo = Instance.new("ImageLabel")
 Logo.Name = "Logo"
 Logo.Parent = Holder
 Logo.BackgroundTransparency = 1
@@ -614,6 +615,9 @@ Logo.Size = UDim2.new(0, 10, 0, 10)
 Logo.Image = "rbxassetid://106409291115299"
 Logo.ImageTransparency = 0
 Logo.ZIndex = 10
+Logo.ScaleType = Enum.ScaleType.Fit -- Ensures the image fits well
+Logo.SizeConstraint = Enum.SizeConstraint.RelativeYY -- Keeps a consistent aspect ratio
+
 
 Credits.Name = "Credits"
 Credits.Parent = Holder
