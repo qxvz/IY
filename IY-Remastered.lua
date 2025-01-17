@@ -3,6 +3,11 @@ if IY_LOADED and not _G.IY_DEBUG == true then
     return
 end
 
+local stopFollow = false
+local animationTrack = nil
+local bangLoop = nil
+local bangDied = nil
+
 pcall(function() getgenv().IY_LOADED = true end)
 
 local cloneref = cloneref or function(o) return o end
@@ -10481,14 +10486,18 @@ function getTorso(x)
 	return x:FindFirstChild("Torso") or x:FindFirstChild("UpperTorso") or x:FindFirstChild("LowerTorso") or x:FindFirstChild("HumanoidRootPart")
 end
 
+-- Declare global variables
+local stopFollow = false
+local animationTrack = nil
+local bangLoop = nil
+local bangDied = nil
+
 addcmd("bang", {"rape"}, function(args, speaker)
-    execCmd("unbang")
+    execCmd("unbang") -- Stop any ongoing 'bang' actions
     wait()
 
     local Players = game:GetService("Players")
     local RunService = game:GetService("RunService")
-    local stopFollow = false
-    local animationTrack = nil
 
     local function moveSmoothly(part, startCFrame, endCFrame, duration)
         local elapsedTime = 0
@@ -10597,13 +10606,12 @@ addcmd("unbang", {"unrape"}, function(args, speaker)
         animationTrack = nil
     end
 
-    -- Disconnect the loop if it exists
+    -- Disconnect any ongoing loops or connections
     if bangLoop then
         bangLoop:Disconnect()
         bangLoop = nil
     end
 
-    -- Clean up additional connections if needed
     if bangDied then
         bangDied:Disconnect()
         bangDied = nil
