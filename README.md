@@ -6,7 +6,7 @@
     <td>Beta</td>
   </tr>
   <tr>
-    <th>Status</th>
+    <th>BETA</th>
     <td>WIP (Still working on everything)</td>
   </tr>
 </table>
