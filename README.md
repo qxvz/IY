@@ -3,10 +3,10 @@
 <table>
   <tr>
     <th>Version</th>
-    <td>Beta</td>
+    <td>Status</td>
   </tr>
   <tr>
-    <th>BETA</th>
+    <th>Beta</th>
     <td>WIP (Still working on everything)</td>
   </tr>
 </table>
