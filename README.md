@@ -4,7 +4,7 @@
     <th>Status</th>
   </tr>
   <tr>
-    <th>Beta</th>
+    <td>0.095 Beta</td>
     <td>WIP (Still working on everything)</td>
   </tr>
 </table>
