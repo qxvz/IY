@@ -1,7 +1,7 @@
 <table>
   <tr>
     <th>Version</th>
-    <td>Status</td>
+    <th>Status</th>
   </tr>
   <tr>
     <th>Beta</th>
