@@ -4554,6 +4554,8 @@ CMDs[#CMDs + 1] = {NAME = 'appearanceid / aid [player]', DESC = 'Notifies a play
 CMDs[#CMDs + 1] = {NAME = 'copyappearanceid / caid [player]', DESC = 'Copies a players appearance ID to your clipboard'}
 CMDs[#CMDs + 1] = {NAME = 'bang [player] [speed]', DESC = 'Remastered bang script'}
 CMDs[#CMDs + 1] = {NAME = 'unbang', DESC = 'Stop bang'}
+CMDs[#CMDs + 1] = {NAME = 'thrustfuck [player] [speed]', DESC = 'Bang script but goes back and forwards for a realistic fucking simulation'}
+CMDs[#CMDs + 1] = {NAME = 'unfuck', DESC = 'Stop bang'}
 CMDs[#CMDs + 1] = {NAME = 'carpet [player]', DESC = 'Be someones carpet'}
 CMDs[#CMDs + 1] = {NAME = 'uncarpet', DESC = 'Undoes carpet'}
 CMDs[#CMDs + 1] = {NAME = 'friend [player]', DESC = 'Sends a friend request to certain players'}
@@ -10486,14 +10488,81 @@ function getTorso(x)
 	return x:FindFirstChild("Torso") or x:FindFirstChild("UpperTorso") or x:FindFirstChild("LowerTorso") or x:FindFirstChild("HumanoidRootPart")
 end
 
+addcmd("bang", {"rape"}, function(args, speaker)
+    execCmd("unbang")
+    wait()
+
+    local humanoid = speaker.Character:FindFirstChildWhichIsA("Humanoid")
+    if not humanoid then return end
+
+    -- Animation setup
+    local bangAnim1 = Instance.new("Animation")
+    bangAnim1.AnimationId = "rbxassetid://148840371" -- Original R6 animation
+
+    local bangAnim2 = Instance.new("Animation")
+    bangAnim2.AnimationId = "rbxassetid://225975820" -- New animation
+
+    -- Load and play both animations
+    local bang1 = humanoid:LoadAnimation(bangAnim1)
+    local bang2 = humanoid:LoadAnimation(bangAnim2)
+
+    bang1:Play(0.1, 1, 1)
+    bang2:Play(0.1, 1, 1)
+
+    bang1:AdjustSpeed(args[2] or 3)
+    bang2:AdjustSpeed(args[2] or 3)
+
+    -- Disconnect and cleanup when the humanoid dies
+    bangDied = humanoid.Died:Connect(function()
+        bang1:Stop()
+        bang2:Stop()
+        bangAnim1:Destroy()
+        bangAnim2:Destroy()
+        bangDied:Disconnect()
+        if bangLoop then
+            bangLoop:Disconnect()
+        end
+    end)
+
+    -- Optional: Player targeting logic
+    if args[1] then
+        local players = getPlayer(args[1], speaker)
+        for _, v in pairs(players) do
+            local bangplr = Players[v].Name
+            local bangOffset = CFrame.new(0, 0, 1.1)
+            bangLoop = RunService.Stepped:Connect(function()
+                pcall(function()
+                    local otherRoot = getTorso(Players[bangplr].Character)
+                    getRoot(speaker.Character).CFrame = otherRoot.CFrame * bangOffset
+                end)
+            end)
+        end
+    end
+end)
+
+addcmd("unbang", {"unrape"}, function(args, speaker)
+    if bangDied then
+        bangDied:Disconnect()
+    end
+    if bang1 and bang2 then
+        bang1:Stop()
+        bang2:Stop()
+        bangAnim1:Destroy()
+        bangAnim2:Destroy()
+    end
+    if bangLoop then
+        bangLoop:Disconnect()
+    end
+end)
+
 -- Declare global variables
 local stopFollow = false
 local animationTrack = nil
 local bangLoop = nil
 local bangDied = nil
 
-addcmd("bang", {"rape"}, function(args, speaker)
-    execCmd("unbang") -- Stop any ongoing 'bang' actions
+addcmd("thrustfuck", {"fuck"}, function(args, speaker)
+    execCmd("unfuck") -- Stop any ongoing 'bang' actions
     wait()
 
     local Players = game:GetService("Players")
@@ -10602,7 +10671,7 @@ addcmd("bang", {"rape"}, function(args, speaker)
     end
 end)
 
-addcmd("unbang", {"unrape"}, function(args, speaker)
+addcmd("unfuck", {"unrape"}, function(args, speaker)
     -- Stop following
     stopFollow = true
 
