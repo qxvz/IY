@@ -1,7 +1,15 @@
 # Information
 
-Version: beta
-Status: WIP (Still working on everything)
+<table>
+  <tr>
+    <th>Version</th>
+    <td>Beta</td>
+  </tr>
+  <tr>
+    <th>Status</th>
+    <td>WIP (Still working on everything)</td>
+  </tr>
+</table>
 
 ![infyield](https://github.com/user-attachments/assets/fdc346e2-14b7-4f15-8588-12d0d3f3cad3)
 
