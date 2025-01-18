@@ -10488,8 +10488,11 @@ function getTorso(x)
 	return x:FindFirstChild("Torso") or x:FindFirstChild("UpperTorso") or x:FindFirstChild("LowerTorso") or x:FindFirstChild("HumanoidRootPart")
 end
 
+-- Global variables for animations and connections
+local bang1, bang2, bangDied, bangLoop
+
 addcmd("bang", {"rape"}, function(args, speaker)
-    execCmd("unbang")
+    execCmd("unbang") -- Ensure any existing animations are stopped
     wait()
 
     local humanoid = speaker.Character:FindFirstChildWhichIsA("Humanoid")
@@ -10503,8 +10506,8 @@ addcmd("bang", {"rape"}, function(args, speaker)
     bangAnim2.AnimationId = "rbxassetid://225975820" -- New animation
 
     -- Load and play both animations
-    local bang1 = humanoid:LoadAnimation(bangAnim1)
-    local bang2 = humanoid:LoadAnimation(bangAnim2)
+    bang1 = humanoid:LoadAnimation(bangAnim1)
+    bang2 = humanoid:LoadAnimation(bangAnim2)
 
     bang1:Play(0.1, 1, 1)
     bang2:Play(0.1, 1, 1)
@@ -10514,14 +10517,7 @@ addcmd("bang", {"rape"}, function(args, speaker)
 
     -- Disconnect and cleanup when the humanoid dies
     bangDied = humanoid.Died:Connect(function()
-        bang1:Stop()
-        bang2:Stop()
-        bangAnim1:Destroy()
-        bangAnim2:Destroy()
-        bangDied:Disconnect()
-        if bangLoop then
-            bangLoop:Disconnect()
-        end
+        execCmd("unbang") -- Stop animations and cleanup
     end)
 
     -- Optional: Player targeting logic
@@ -10541,25 +10537,36 @@ addcmd("bang", {"rape"}, function(args, speaker)
 end)
 
 addcmd("unbang", {"unrape"}, function(args, speaker)
+    -- Stop and cleanup animations
+    if bang1 then
+        bang1:Stop()
+        bang1:Destroy()
+        bang1 = nil
+    end
+    if bang2 then
+        bang2:Stop()
+        bang2:Destroy()
+        bang2 = nil
+    end
+
+    -- Disconnect any active connections
     if bangDied then
         bangDied:Disconnect()
-    end
-    if bang1 and bang2 then
-        bang1:Stop()
-        bang2:Stop()
-        bangAnim1:Destroy()
-        bangAnim2:Destroy()
+        bangDied = nil
     end
     if bangLoop then
         bangLoop:Disconnect()
+        bangLoop = nil
     end
 end)
+
 
 -- Declare global variables
 local stopFollow = false
 local animationTrack = nil
 local bangLoop = nil
 local bangDied = nil
+local sittingConnection = nil
 
 addcmd("thrustfuck", {"fuck"}, function(args, speaker)
     execCmd("unfuck") -- Stop any ongoing 'bang' actions
@@ -10567,8 +10574,8 @@ addcmd("thrustfuck", {"fuck"}, function(args, speaker)
 
     local Players = game:GetService("Players")
     local RunService = game:GetService("RunService")
-    local sittingConnection
 
+    -- Smooth movement function
     local function moveSmoothly(part, startCFrame, endCFrame, duration)
         local elapsedTime = 0
         while elapsedTime < duration do
@@ -10579,6 +10586,7 @@ addcmd("thrustfuck", {"fuck"}, function(args, speaker)
         end
     end
 
+    -- Prevent sitting while the action is active
     local function preventSitting(humanoid)
         -- Disconnect previous sitting connection if it exists
         if sittingConnection then sittingConnection:Disconnect() end
@@ -10591,6 +10599,7 @@ addcmd("thrustfuck", {"fuck"}, function(args, speaker)
         end)
     end
 
+    -- Main thrusting function
     local function smoothBang(targetPlayerName, speed)
         stopFollow = false
         speed = tonumber(speed) or 1
@@ -10656,6 +10665,7 @@ addcmd("thrustfuck", {"fuck"}, function(args, speaker)
             moveSmoothly(localRoot, localRoot.CFrame, backwardCFrame, moveDuration)
         end
 
+        -- Clean up animation
         if animationTrack then
             animationTrack:Stop()
             animationTrack = nil
@@ -10692,12 +10702,13 @@ addcmd("unfuck", {"unrape"}, function(args, speaker)
         bangDied = nil
     end
 
-    -- Allow sitting again
+    -- Allow sitting again by disconnecting the prevent sitting connection
     if sittingConnection then
         sittingConnection:Disconnect()
         sittingConnection = nil
     end
 end)
+
 addcmd('carpet',{},function(args, speaker)
 	if not r15(speaker) then
 		execCmd('uncarpet')
