@@ -4557,7 +4557,7 @@ CMDs[#CMDs + 1] = {NAME = 'unbang', DESC = 'Stop bang'}
 CMDs[#CMDs + 1] = {NAME = 'thrustfuck [player] [speed]', DESC = 'Bang script but goes back and forwards for a realistic fucking simulation'}
 CMDs[#CMDs + 1] = {NAME = 'unfuck', DESC = 'Stop bang'}
 CMDs[#CMDs + 1] = {NAME = 'reversefuck [player] [speed]', DESC = 'Troll people by getting raped by them'}
-CMDs[#CMDs + 1] = {NAME = 'unfuck', DESC = 'Stop bang'}
+CMDs[#CMDs + 1] = {NAME = 'unrevfuck', DESC = 'Stop bang'}
 CMDs[#CMDs + 1] = {NAME = 'carpet [player]', DESC = 'Be someones carpet'}
 CMDs[#CMDs + 1] = {NAME = 'uncarpet', DESC = 'Undoes carpet'}
 CMDs[#CMDs + 1] = {NAME = 'friend [player]', DESC = 'Sends a friend request to certain players'}
