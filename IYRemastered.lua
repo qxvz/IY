@@ -10683,7 +10683,7 @@ addcmd("thrustfuck", {"fuck"}, function(args, speaker)
     end
 end)
 
-addcmd("unfuck", {"unrape"}, function(args, speaker)
+addcmd("unfuck", {"unthrustrape"}, function(args, speaker)
     -- Stop following
     stopFollow = true
 
@@ -10756,15 +10756,15 @@ addcmd("reversefuck", {"trollfuck"}, function(args, speaker)
 
     -- Disconnect and cleanup on death or reset
     bangDied = humanoid.Died:Connect(function()
-        execCmd("unbang")
+        execCmd("unrevfuck")
     end)
 
     speaker.CharacterRemoving:Connect(function()
-        execCmd("unbang")
+        execCmd("unrevfuck")
     end)
 end)
 
-addcmd("unfuck", {"unrape"}, function(args, speaker)
+addcmd("unrevfuck", {"unrevrape"}, function(args, speaker)
     -- Stop and cleanup animations
     if bangTrack then
         bangTrack:Stop()
