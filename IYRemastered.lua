@@ -10712,7 +10712,7 @@ addcmd("unfuck", {"unthrustrape"}, function(args, speaker)
 end)
 
 addcmd("reversefuck", {"trollfuck"}, function(args, speaker)
-    execCmd("unbang") -- Ensure any existing animations are stopped
+    execCmd("unrevfuck") -- Ensure any existing animations and loops are stopped
     wait()
 
     local humanoid = speaker.Character:FindFirstChildWhichIsA("Humanoid")
@@ -10725,12 +10725,14 @@ addcmd("reversefuck", {"trollfuck"}, function(args, speaker)
     -- Load and play the animation
     bangTrack = humanoid:LoadAnimation(bangAnim)
     bangTrack:Play(0.1, 1, 1)
-    bangTrack:AdjustSpeed(args[2] or 3)
+
+    local speed = tonumber(args[2]) or 3 -- Default speed
+    bangTrack:AdjustSpeed(speed)
 
     -- Movement variables
-    local bangOffset = CFrame.new(0, 0, -2) -- Default position in front
-    local oscillationRange = 1 -- Back-and-forth distance
-    local oscillationSpeed = 2 -- Speed of oscillation
+    local baseOffset = 2 -- Distance in front of the target
+    local oscillationRange = 1 -- Back-and-forth range
+    local oscillationSpeed = speed * 10 -- Adjusted oscillation speed
     local bangLoop, bangDied
 
     -- Player targeting logic
@@ -10740,14 +10742,14 @@ addcmd("reversefuck", {"trollfuck"}, function(args, speaker)
             local targetPlayer = Players[v]
             local targetName = targetPlayer.Name
 
-            bangLoop = RunService.Stepped:Connect(function(deltaTime)
+            bangLoop = RunService.Heartbeat:Connect(function(deltaTime)
                 pcall(function()
                     local otherRoot = getTorso(Players[targetName].Character)
                     local speakerRoot = getRoot(speaker.Character)
                     if otherRoot and speakerRoot then
                         local timeElapsed = os.clock() * oscillationSpeed
                         local moveFactor = math.sin(timeElapsed) * oscillationRange
-                        speakerRoot.CFrame = otherRoot.CFrame * bangOffset + CFrame.new(0, 0, moveFactor).Position
+                        speakerRoot.CFrame = otherRoot.CFrame * CFrame.new(0, 0, -baseOffset + moveFactor)
                     end
                 end)
             end)
