@@ -10712,7 +10712,7 @@ addcmd("unfuck", {"unthrustrape"}, function(args, speaker)
 end)
 
 addcmd("reversefuck", {"trollfuck"}, function(args, speaker)
-    execCmd("unrevfuck") -- Ensure any existing animations and loops are stopped
+    execCmd("unrevfuck") -- Stop any ongoing actions
     wait()
 
     local humanoid = speaker.Character:FindFirstChildWhichIsA("Humanoid")
@@ -10782,6 +10782,12 @@ addcmd("unrevfuck", {"unrevrape"}, function(args, speaker)
     if bangDied then
         bangDied:Disconnect()
         bangDied = nil
+    end
+
+    -- Resetting the target position (optional)
+    local speakerRoot = getRoot(speaker.Character)
+    if speakerRoot then
+        speakerRoot.CFrame = speakerRoot.CFrame * CFrame.new(0, 0, 0) -- Stop any applied motion
     end
 end)
 
