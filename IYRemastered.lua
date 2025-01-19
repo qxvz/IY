@@ -10710,8 +10710,7 @@ addcmd("unfuck", {"unthrustrape"}, function(args, speaker)
         sittingConnection = nil
     end
 end)
-
-addcmd("reversefuck", {"revfuck"}, function(args, speaker)
+addcmd("reversefuck", {"trollfuck"}, function(args, speaker)
     execCmd("unrevfuck") -- Ensure any existing animations and motions are stopped
     wait()
 
@@ -10775,7 +10774,7 @@ addcmd("reversefuck", {"revfuck"}, function(args, speaker)
     end)
 end)
 
-addcmd("unrevfuck", {"unrevrape"}, function(args, speaker)
+addcmd("unrevfuck", {"unrev"}, function(args, speaker)
     -- Stop and cleanup animations
     if bangTrack then
         bangTrack:Stop()
@@ -10794,8 +10793,14 @@ addcmd("unrevfuck", {"unrevrape"}, function(args, speaker)
     if speakerRoot then
         speakerRoot.CFrame = speakerRoot.CFrame -- Stops movement and resets position
     end
-end)
 
+    -- Explicitly reset the position to prevent any further movement
+    local target = speaker.Character
+    local targetRoot = getRoot(target)
+    if targetRoot then
+        targetRoot.CFrame = targetRoot.CFrame -- This line ensures no lingering back-and-forth motion continues
+    end
+end)
 addcmd('carpet',{},function(args, speaker)
 	if not r15(speaker) then
 		execCmd('uncarpet')
