@@ -10711,8 +10711,8 @@ addcmd("unfuck", {"unthrustrape"}, function(args, speaker)
     end
 end)
 
-addcmd("reversefuck", {"trollfuck"}, function(args, speaker)
-    execCmd("unrevfuck") -- Stop any ongoing actions
+addcmd("reversefuck", {"revfuck"}, function(args, speaker)
+    execCmd("unrevfuck") -- Ensure any existing animations and motions are stopped
     wait()
 
     local humanoid = speaker.Character:FindFirstChildWhichIsA("Humanoid")
@@ -10720,7 +10720,7 @@ addcmd("reversefuck", {"trollfuck"}, function(args, speaker)
 
     -- Animation setup
     local bangAnim = Instance.new("Animation")
-    bangAnim.AnimationId = "rbxassetid://92080889861410" -- R15 animation
+    bangAnim.AnimationId = "rbxassetid://92080889861410" -- Animation for the R15 character
 
     -- Load and play the animation
     bangTrack = humanoid:LoadAnimation(bangAnim)
@@ -10730,10 +10730,19 @@ addcmd("reversefuck", {"trollfuck"}, function(args, speaker)
     bangTrack:AdjustSpeed(speed)
 
     -- Movement variables
-    local baseOffset = 2 -- Distance in front of the target
+    local baseOffset = 2 -- Base distance in front of the target
     local oscillationRange = 1 -- Back-and-forth range
     local oscillationSpeed = speed * 10 -- Adjusted oscillation speed
     local bangLoop, bangDied
+
+    -- Function to get torso or root part
+    local function getTorso(character)
+        return character:FindFirstChild("UpperTorso") or character:FindFirstChild("Torso") or character:FindFirstChild("HumanoidRootPart")
+    end
+
+    local function getRoot(character)
+        return character:FindFirstChild("HumanoidRootPart")
+    end
 
     -- Player targeting logic
     if args[1] then
@@ -10744,12 +10753,12 @@ addcmd("reversefuck", {"trollfuck"}, function(args, speaker)
 
             bangLoop = RunService.Heartbeat:Connect(function(deltaTime)
                 pcall(function()
-                    local otherRoot = getTorso(Players[targetName].Character)
+                    local targetRoot = getTorso(Players[targetName].Character)
                     local speakerRoot = getRoot(speaker.Character)
-                    if otherRoot and speakerRoot then
+                    if targetRoot and speakerRoot then
                         local timeElapsed = os.clock() * oscillationSpeed
                         local moveFactor = math.sin(timeElapsed) * oscillationRange
-                        speakerRoot.CFrame = otherRoot.CFrame * CFrame.new(0, 0, -baseOffset + moveFactor)
+                        speakerRoot.CFrame = targetRoot.CFrame * CFrame.new(0, 0, -baseOffset + moveFactor)
                     end
                 end)
             end)
@@ -10779,18 +10788,13 @@ addcmd("unrevfuck", {"unrevrape"}, function(args, speaker)
         bangLoop:Disconnect()
         bangLoop = nil
     end
-    if bangDied then
-        bangDied:Disconnect()
-        bangDied = nil
-    end
 
-    -- Resetting the target position (optional)
+    -- Reset position to prevent lingering movement
     local speakerRoot = getRoot(speaker.Character)
     if speakerRoot then
-        speakerRoot.CFrame = speakerRoot.CFrame * CFrame.new(0, 0, 0) -- Stop any applied motion
+        speakerRoot.CFrame = speakerRoot.CFrame -- Stops movement and resets position
     end
 end)
-
 
 addcmd('carpet',{},function(args, speaker)
 	if not r15(speaker) then
