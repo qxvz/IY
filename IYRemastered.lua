@@ -4556,7 +4556,7 @@ CMDs[#CMDs + 1] = {NAME = 'bang [player] [speed]', DESC = 'Remastered bang scrip
 CMDs[#CMDs + 1] = {NAME = 'unbang', DESC = 'Stop bang'}
 CMDs[#CMDs + 1] = {NAME = 'thrustfuck [player] [speed]', DESC = 'Bang script but goes back and forwards for a realistic fucking simulation'}
 CMDs[#CMDs + 1] = {NAME = 'unfuck', DESC = 'Stop bang'}
-CMDs[#CMDs + 1] = {NAME = 'reversefuck [player] [speed]', DESC = 'Troll people by getting raped by them'}
+CMDs[#CMDs + 1] = {NAME = 'revfuck [player] [speed]', DESC = 'Troll people by getting raped by them'}
 CMDs[#CMDs + 1] = {NAME = 'unrevfuck', DESC = 'Stop bang'}
 CMDs[#CMDs + 1] = {NAME = 'carpet [player]', DESC = 'Be someones carpet'}
 CMDs[#CMDs + 1] = {NAME = 'uncarpet', DESC = 'Undoes carpet'}
@@ -10710,7 +10710,10 @@ addcmd("unfuck", {"unthrustrape"}, function(args, speaker)
         sittingConnection = nil
     end
 end)
-addcmd("reversefuck", {"trollfuck"}, function(args, speaker)
+
+local bangTrack, bangLoop, bangDied -- Declare these variables at a global level
+
+addcmd("revfuck", {"trollfuck"}, function(args, speaker)
     execCmd("unrevfuck") -- Ensure any existing animations and motions are stopped
     wait()
 
@@ -10732,7 +10735,6 @@ addcmd("reversefuck", {"trollfuck"}, function(args, speaker)
     local baseOffset = 2 -- Base distance in front of the target
     local oscillationRange = 1 -- Back-and-forth range
     local oscillationSpeed = speed * 10 -- Adjusted oscillation speed
-    local bangLoop, bangDied
 
     -- Function to get torso or root part
     local function getTorso(character)
@@ -10774,7 +10776,7 @@ addcmd("reversefuck", {"trollfuck"}, function(args, speaker)
     end)
 end)
 
-addcmd("unrevfuck", {"unrev"}, function(args, speaker)
+addcmd("unrevfuck", {"unrevrape"}, function(args, speaker)
     -- Stop and cleanup animations
     if bangTrack then
         bangTrack:Stop()
@@ -10788,19 +10790,25 @@ addcmd("unrevfuck", {"unrev"}, function(args, speaker)
         bangLoop = nil
     end
 
-    -- Reset position to prevent lingering movement
+    if bangDied then
+        bangDied:Disconnect()
+        bangDied = nil
+    end
+
+    -- Reset position to stop all movements
     local speakerRoot = getRoot(speaker.Character)
     if speakerRoot then
-        speakerRoot.CFrame = speakerRoot.CFrame -- Stops movement and resets position
+        speakerRoot.CFrame = speakerRoot.CFrame -- Reset position to prevent movement
     end
 
     -- Explicitly reset the position to prevent any further movement
     local target = speaker.Character
     local targetRoot = getRoot(target)
     if targetRoot then
-        targetRoot.CFrame = targetRoot.CFrame -- This line ensures no lingering back-and-forth motion continues
+        targetRoot.CFrame = targetRoot.CFrame -- Ensure the movement stops completely
     end
 end)
+
 addcmd('carpet',{},function(args, speaker)
 	if not r15(speaker) then
 		execCmd('uncarpet')
