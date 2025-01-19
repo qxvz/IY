@@ -4556,6 +4556,8 @@ CMDs[#CMDs + 1] = {NAME = 'bang [player] [speed]', DESC = 'Remastered bang scrip
 CMDs[#CMDs + 1] = {NAME = 'unbang', DESC = 'Stop bang'}
 CMDs[#CMDs + 1] = {NAME = 'thrustfuck [player] [speed]', DESC = 'Bang script but goes back and forwards for a realistic fucking simulation'}
 CMDs[#CMDs + 1] = {NAME = 'unfuck', DESC = 'Stop bang'}
+CMDs[#CMDs + 1] = {NAME = 'reversefuck [player] [speed]', DESC = 'Troll people by getting raped by them'}
+CMDs[#CMDs + 1] = {NAME = 'unfuck', DESC = 'Stop bang'}
 CMDs[#CMDs + 1] = {NAME = 'carpet [player]', DESC = 'Be someones carpet'}
 CMDs[#CMDs + 1] = {NAME = 'uncarpet', DESC = 'Undoes carpet'}
 CMDs[#CMDs + 1] = {NAME = 'friend [player]', DESC = 'Sends a friend request to certain players'}
@@ -10708,6 +10710,79 @@ addcmd("unfuck", {"unrape"}, function(args, speaker)
         sittingConnection = nil
     end
 end)
+
+addcmd("reversefuck", {"trollfuck"}, function(args, speaker)
+    execCmd("unbang") -- Ensure any existing animations are stopped
+    wait()
+
+    local humanoid = speaker.Character:FindFirstChildWhichIsA("Humanoid")
+    if not humanoid then return end
+
+    -- Animation setup
+    local bangAnim = Instance.new("Animation")
+    bangAnim.AnimationId = "rbxassetid://92080889861410" -- R15 animation
+
+    -- Load and play the animation
+    bangTrack = humanoid:LoadAnimation(bangAnim)
+    bangTrack:Play(0.1, 1, 1)
+    bangTrack:AdjustSpeed(args[2] or 3)
+
+    -- Movement variables
+    local bangOffset = CFrame.new(0, 0, -2) -- Default position in front
+    local oscillationRange = 1 -- Back-and-forth distance
+    local oscillationSpeed = 2 -- Speed of oscillation
+    local bangLoop, bangDied
+
+    -- Player targeting logic
+    if args[1] then
+        local players = getPlayer(args[1], speaker)
+        for _, v in pairs(players) do
+            local targetPlayer = Players[v]
+            local targetName = targetPlayer.Name
+
+            bangLoop = RunService.Stepped:Connect(function(deltaTime)
+                pcall(function()
+                    local otherRoot = getTorso(Players[targetName].Character)
+                    local speakerRoot = getRoot(speaker.Character)
+                    if otherRoot and speakerRoot then
+                        local timeElapsed = os.clock() * oscillationSpeed
+                        local moveFactor = math.sin(timeElapsed) * oscillationRange
+                        speakerRoot.CFrame = otherRoot.CFrame * bangOffset + CFrame.new(0, 0, moveFactor).Position
+                    end
+                end)
+            end)
+        end
+    end
+
+    -- Disconnect and cleanup on death or reset
+    bangDied = humanoid.Died:Connect(function()
+        execCmd("unbang")
+    end)
+
+    speaker.CharacterRemoving:Connect(function()
+        execCmd("unbang")
+    end)
+end)
+
+addcmd("unfuck", {"unrape"}, function(args, speaker)
+    -- Stop and cleanup animations
+    if bangTrack then
+        bangTrack:Stop()
+        bangTrack:Destroy()
+        bangTrack = nil
+    end
+
+    -- Disconnect any active connections
+    if bangLoop then
+        bangLoop:Disconnect()
+        bangLoop = nil
+    end
+    if bangDied then
+        bangDied:Disconnect()
+        bangDied = nil
+    end
+end)
+
 
 addcmd('carpet',{},function(args, speaker)
 	if not r15(speaker) then
