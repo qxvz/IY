@@ -4556,7 +4556,7 @@ CMDs[#CMDs + 1] = {NAME = 'bang [player] [speed]', DESC = 'Remastered bang scrip
 CMDs[#CMDs + 1] = {NAME = 'unbang', DESC = 'Stop bang'}
 CMDs[#CMDs + 1] = {NAME = 'thrustfuck [player] [speed]', DESC = 'Bang script but goes back and forwards for a realistic fucking simulation'}
 CMDs[#CMDs + 1] = {NAME = 'unfuck', DESC = 'Stop bang'}
-CMDs[#CMDs + 1] = {NAME = 'revfuck [player] [speed]', DESC = 'Troll people by getting raped by them'}
+CMDs[#CMDs + 1] = {NAME = 'revfuck [player] [speed]', DESC = 'Use R15 for it to work'}
 CMDs[#CMDs + 1] = {NAME = 'unrevfuck', DESC = 'Stop bang'}
 CMDs[#CMDs + 1] = {NAME = 'carpet [player]', DESC = 'Be someones carpet'}
 CMDs[#CMDs + 1] = {NAME = 'uncarpet', DESC = 'Undoes carpet'}
@@ -10500,9 +10500,16 @@ addcmd("bang", {"rape"}, function(args, speaker)
     local humanoid = speaker.Character:FindFirstChildWhichIsA("Humanoid")
     if not humanoid then return end
 
+    -- Determine if the character is R15
+    local isR15 = humanoid.RigType == Enum.HumanoidRigType.R15
+
     -- Animation setup
     local bangAnim1 = Instance.new("Animation")
-    bangAnim1.AnimationId = "rbxassetid://148840371" -- Original R6 animation
+    if isR15 then
+        bangAnim1.AnimationId = "rbxassetid://5918726674" -- R15 animation
+    else
+        bangAnim1.AnimationId = "rbxassetid://148840371" -- Original R6 animation
+    end
 
     local bangAnim2 = Instance.new("Animation")
     bangAnim2.AnimationId = "rbxassetid://225975820" -- New animation
@@ -10561,7 +10568,6 @@ addcmd("unbang", {"unrape"}, function(args, speaker)
         bangLoop = nil
     end
 end)
-
 
 -- Declare global variables
 local stopFollow = false
@@ -10720,6 +10726,14 @@ addcmd("revfuck", {"trollfuck"}, function(args, speaker)
     local humanoid = speaker.Character:FindFirstChildWhichIsA("Humanoid")
     if not humanoid then return end
 
+    -- Check if character is R15
+    local isR15 = speaker.Character:FindFirstChild("UpperTorso") ~= nil
+
+    if not isR15 then
+        notify("Error", "You must be R15 to use this command") -- If not R15, send notification
+        return
+    end
+
     -- Animation setup
     local bangAnim = Instance.new("Animation")
     bangAnim.AnimationId = "rbxassetid://92080889861410" -- Animation for the R15 character
@@ -10808,6 +10822,7 @@ addcmd("unrevfuck", {"unrevrape"}, function(args, speaker)
         targetRoot.CFrame = targetRoot.CFrame -- Ensure the movement stops completely
     end
 end)
+
 
 addcmd('carpet',{},function(args, speaker)
 	if not r15(speaker) then
