@@ -9,11 +9,6 @@
   </tr>
 </table>
 
-What's coming:
-- Hugging players
-- Improved fly, bypasses anticheat
-- More commands such as headbang, etc.
-
 Infinite Yield Remastered is a better version of the default IY, as it will include more commands and features and improved commands. It will also include a smoother cleaner UI, but as this is still being worked on, it is only in beta.
 Credits to the original IY devs for the source code.
 
